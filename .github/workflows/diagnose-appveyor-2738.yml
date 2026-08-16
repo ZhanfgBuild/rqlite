@@ -1,0 +1,27 @@
+name: Diagnose PR 2738 on Windows
+
+on:
+  push:
+    branches:
+      - ci/diagnose-appveyor-2738
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Show Go environment
+        shell: pwsh
+        run: |
+          go version
+          go env
+      - name: Resolve modules
+        run: go get ./...
+      - name: Run full test suite
+        run: go test -failfast ./...
+      - name: Install all commands
+        run: go install ./...
